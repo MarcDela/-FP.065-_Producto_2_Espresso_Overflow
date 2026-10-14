@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-
   app:
     build: .
+    image: app_libreria:v1.0
     container_name: app_libreria
     restart: always
     env_file:
@@ -16,7 +16,9 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      extra_hosts:
+      SECURITY_USER_NAME: ${SECURITY_USER_NAME}
+      SECURITY_USER_PASSWORD: ${SECURITY_USER_PASSWORD}
+    extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - libreria-net
