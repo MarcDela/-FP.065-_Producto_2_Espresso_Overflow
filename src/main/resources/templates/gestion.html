@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Gestión - Espresso Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased">
+
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+        
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-800 pb-5">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-100">Gestión de la Librería</h1>
+                <p class="text-slate-400 text-sm mt-1">Panel de administración para el control de entidades</p>
+            </div>
+            
+            <!-- Botón Dinámico de Creación (cambia según el Tab seleccionado) -->
+            <a id="btn-nuevo-dinamico" href="/gestion/nuevo-usuario" 
+               class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/10 transition flex items-center justify-center gap-2">
+                ➕ Añadir Nuevo Usuario
+            </a>
+        </div>
+
+        <!-- Botones de Pestañas (Tabs) -->
+        <div class="flex items-center gap-3">
+            <button onclick="switchTab('usuarios')" id="btn-usuarios" class="tab-btn px-4 py-2 text-xs font-bold rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                👤 Usuarios
+            </button>
+            <button onclick="switchTab('libros')" id="btn-libros" class="tab-btn px-4 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-400 border border-slate-700">
+                📚 Libros
+            </button>
+            <button onclick="switchTab('prestamos')" id="btn-prestamos" class="tab-btn px-4 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-400 border border-slate-700">
+                📋 Préstamos
+            </button>
+        </div>
+
+        <!-- Contenedor Principal Tablas -->
+        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-6 shadow-2xl">
+            
+            <!-- Tab 1: Usuarios -->
+            <div id="tab-usuarios" class="tab-content">
+                <h3 class="font-bold text-lg mb-4 text-slate-200">Listado de Usuarios Registrados</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-900/60 text-slate-400 text-xs uppercase">
+                            <tr>
+                                <th class="p-3">ID</th>
+                                <th class="p-3">Nombre</th>
+                                <th class="p-3">Email</th>
+                                <th class="p-3">Rol</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            <tr th:each="usuario : ${listaUsuarios}">
+                                <td class="p-3 font-mono" th:text="${usuario.id}">1</td>
+                                <td class="p-3 font-semibold text-slate-100" th:text="${usuario.nombre}">Marc</td>
+                                <td class="p-3" th:text="${usuario.email}">marc@libreria.com</td>
+                                <td class="p-3">
+                                    <span th:text="${usuario.rol}" class="px-2 py-0.5 text-xs font-bold rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">ADMIN</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Libros -->
+            <div id="tab-libros" class="tab-content hidden">
+                <h3 class="font-bold text-lg mb-4 text-slate-200">Inventario de Libros</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-900/60 text-slate-400 text-xs uppercase">
+                            <tr>
+                                <th class="p-3">ID</th>
+                                <th class="p-3">Título</th>
+                                <th class="p-3">Autor</th>
+                                <th class="p-3">Estado</th>
+                                <th class="p-3">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            <tr th:each="libro : ${listaLibros}">
+                                <td class="p-3 font-mono" th:text="${libro.id}">1</td>
+                                <td class="p-3 font-semibold text-slate-100" th:text="${libro.titulo}">Título</td>
+                                <td class="p-3" th:text="${libro.autor}">Autor</td>
+                                <td class="p-3">
+                                    <span th:text="${libro.disponible ? 'Disponible' : 'Prestado'}" 
+                                          th:classappend="${libro.disponible} ? 'text-emerald-400' : 'text-rose-400'">Disponible</span>
+                                </td>
+                                <td class="p-3">
+                                    <a th:href="@{/gestion/eliminar-libro/{id}(id=${libro.id})}" class="text-xs text-rose-400 hover:underline">Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Préstamos -->
+            <div id="tab-prestamos" class="tab-content hidden">
+                <h3 class="font-bold text-lg mb-4 text-slate-200">Histórico General de Préstamos</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-900/60 text-slate-400 text-xs uppercase">
+                            <tr>
+                                <th class="p-3">ID</th>
+                                <th class="p-3">Libro</th>
+                                <th class="p-3">Usuario</th>
+                                <th class="p-3">Devolución</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            <tr th:each="p : ${listaPrestamos}">
+                                <td class="p-3 font-mono" th:text="${p.id}">1</td>
+                                <td class="p-3" th:text="${p.libro.titulo}">Libro</td>
+                                <td class="p-3" th:text="${p.usuario.nombre}">Usuario</td>
+                                <td class="p-3" th:text="${p.fechaDevolucion}">2026-10-20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Script de Pestañas + Cambio Dinámico de Botón "Nuevo" -->
+    <script>
+        function switchTab(tabName) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Restablecer estilos de botones de tab
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-400 border border-slate-700";
+            });
+
+            // Activar tab seleccionado
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabName);
+            activeBtn.className = "tab-btn px-4 py-2 text-xs font-bold rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30";
+
+            // Actualizar el botón dinámico superior según el Tab
+            const btnNuevo = document.getElementById('btn-nuevo-dinamico');
+            if (tabName === 'usuarios') {
+                btnNuevo.innerText = '➕ Añadir Nuevo Usuario';
+                btnNuevo.href = '/gestion/nuevo-usuario';
+            } else if (tabName === 'libros') {
+                btnNuevo.innerText = '➕ Añadir Nuevo Libro';
+                btnNuevo.href = '/gestion/nuevo-libro';
+            } else if (tabName === 'prestamos') {
+                btnNuevo.innerText = '➕ Registrar Nuevo Préstamo';
+                btnNuevo.href = '/prestamos';
+            }
+        }
+    </script>
+</body>
+</html>

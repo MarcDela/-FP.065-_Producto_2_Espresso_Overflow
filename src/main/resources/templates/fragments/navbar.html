@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="navbar" class="bg-slate-800/90 backdrop-blur border-b border-slate-700/80 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <!-- Logo / Nombre -->
+        <a href="/" class="flex items-center gap-2">
+            <span class="text-2xl">📚</span>
+            <span class="text-xl font-bold bg-gradient-to-r from-teal-400 to-sky-400 bg-clip-text text-transparent">
+                Espresso Library
+            </span>
+        </a>
+
+        <!-- Menú de Navegación -->
+        <nav class="flex items-center gap-6 text-sm font-medium">
+            <a href="/" class="text-slate-300 hover:text-teal-400 transition-colors">Home</a>
+            <a href="/prestamos" class="text-slate-300 hover:text-teal-400 transition-colors">Solicitar Préstamo</a>
+            <a href="/historial" class="text-slate-300 hover:text-teal-400 transition-colors">Mis Prestamos</a>
+            
+            <!-- Visibilidad según ROL ADMIN (vía atributo o Spring Security) -->
+            <a th:if="${usuarioLogueado != null and usuarioLogueado.rol == 'ADMIN'}" 
+               href="/gestion" 
+               class="px-3 py-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
+               ⚙️ Gestión
+            </a>
+
+            <!-- Login / Estado de Sesión -->
+            <div class="pl-4 border-l border-slate-700 flex items-center gap-3">
+                <span th:if="${usuarioLogueado != null}" class="text-xs text-slate-400">
+                    Hola, <strong class="text-slate-200" th:text="${usuarioLogueado.nombre}">Usuario</strong>
+                </span>
+                <a th:if="${usuarioLogueado == null}" href="/login" class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-teal-500 text-slate-950 hover:bg-teal-400 transition">
+                    Iniciar Sesión
+                </a>
+            </div>
+        </nav>
+    </div>
+</header>
+</html>

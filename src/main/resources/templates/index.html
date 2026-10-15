@@ -3,41 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World - Proyecto Librería</title>
+    <title>Catálogo - Espresso Library</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center font-sans antialiased">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased">
 
-    <div class="max-w-xl w-full mx-4 p-8 bg-slate-800/80 backdrop-blur border border-slate-700 rounded-2xl shadow-2xl text-center space-y-6">
-    
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            Spring Boot Activo
-        </div>
+    <!-- Incluir Navbar Reutilizable -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-        <h1 class="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-teal-400 via-sky-400 to-indigo-400 bg-clip-text text-transparent">
-            ¡Hola Mundo!
-        </h1>
-
-        <p class="text-lg text-slate-300 leading-relaxed" th:text="${mensaje}">
-            Mensaje por defecto si falla Thymeleaf...
-        </p>
-
-        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-700/50 text-left space-y-2 text-sm text-slate-400">
-            <div class="flex justify-between items-center">
-                <span>Estado Servidor:</span>
-                <span class="text-emerald-400 font-mono">200 OK</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span>Framework:</span>
-                <span class="text-sky-400 font-mono">Spring Boot 3 / MVC</span>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+        
+        <!-- Header de la sección -->
+        <div class="flex justify-between items-end border-b border-slate-800 pb-5">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-100">Catálogo de Libros</h1>
+                <p class="text-slate-400 text-sm mt-1">Explora nuestra colección de libros disponibles para préstamo</p>
             </div>
         </div>
 
-        <p class="text-xs text-slate-500 pt-2 border-t border-slate-700/50">
-            Producto 1 • Aplicación back-end con Java en servidores de aplicaciones
-        </p>
-    </div>
+        <!-- Grid de Libros (Targetas) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div th:each="libro : ${libros}" 
+                 class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5 flex flex-col justify-between space-y-4 hover:border-slate-600 transition shadow-xl">
+                
+                <div class="space-y-3">
+                    <!-- Imagen Portada -->
+                    <div class="w-full h-48 bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center border border-slate-700/50">
+                        <img th:if="${libro.linkimagen != null}" th:src="${libro.linkimagen}" class="object-cover w-full h-full" alt="Portada"/>
+                        <span th:if="${libro.linkimagen == null}" class="text-4xl text-slate-600">📖</span>
+                    </div>
 
+                    <!-- Título y Autor -->
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-100 leading-snug" th:text="${libro.titulo}">Título del Libro</h3>
+                        <p class="text-sm text-slate-400" th:text="${libro.autor}">Autor del libro</p>
+                    </div>
+
+                    <p class="text-xs text-slate-400 line-clamp-2" th:text="${libro.descripcion}">Descripción breve del contenido del libro...</p>
+                </div>
+
+                <!-- Footer de la tarjeta: Estado y Botón -->
+                <div class="pt-3 border-t border-slate-700/50 flex items-center justify-between">
+                    <span th:if="${libro.disponible}" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        ● Disponible
+                    </span>
+                    <span th:if="${!libro.disponible}" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                        ● Prestado
+                    </span>
+
+                    <a th:if="${libro.disponible}" th:href="@{/prestamos(libroId=${libro.id})}" 
+                       class="text-xs font-semibold text-teal-400 hover:text-teal-300 transition">
+                       Solicitar →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
 </body>
 </html>
