@@ -9,8 +9,9 @@ services:
     env_file:
       - .env
     ports:
-      - "${SERVER_PORT}:8080"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     environment:
+      SERVER_PORT: ${SERVER_PORT}
       DB_HOST: host.docker.internal
       MYSQL_PORT: ${MYSQL_PORT}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
