@@ -31,4 +31,7 @@ public class Usuario {
             this.rol = "USER";
         }
     }
+    
+    @Column(nullable = false)
+    private String password;
 }
