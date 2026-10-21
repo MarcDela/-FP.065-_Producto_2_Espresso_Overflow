@@ -1,7 +1,6 @@
 package Espresso.Overflow.Libreria.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 @Table(name = "prestamos")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Prestamo {
 
     @Id

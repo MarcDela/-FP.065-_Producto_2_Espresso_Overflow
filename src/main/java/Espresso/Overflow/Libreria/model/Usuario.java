@@ -1,7 +1,6 @@
 package Espresso.Overflow.Libreria.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "usuarios")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Usuario {
 
     @Id
@@ -25,5 +23,12 @@ public class Usuario {
     private String telefono;
 
     @Column(nullable = false)
-    private String rol = "USER"; // "ADMIN" o "USER"
+    private String rol; // Quitamos el = "USER" de aquí para no enfadar a Lombok
+
+    @PrePersist
+    public void prePersist() {
+        if (this.rol == null) {
+            this.rol = "USER";
+        }
+    }
 }
