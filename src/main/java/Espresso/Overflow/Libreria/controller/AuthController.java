@@ -43,7 +43,7 @@ public class AuthController {
         return "redirect:" + (referer != null ? referer : "/");
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/cerrar-sesion")
     public String logout(HttpSession session) {
         session.invalidate(); // Destruir la sesión
         return "redirect:/";
